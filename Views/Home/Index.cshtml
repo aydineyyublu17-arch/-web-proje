@@ -1,0 +1,309 @@
+@model IEnumerable<PrintMarket.Models.Product>
+
+@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+<!-- Hero Section Premium -->
+<section class="hero-section position-relative overflow-hidden py-5" style="background: linear-gradient(135deg, #1B2631 0%, #2c3e50 100%); color: white; min-height: 500px; display: flex; align-items: center;">
+    <div class="container position-relative" style="z-index: 2;">
+        <div class="text-center mb-5">
+            <h1 class="display-3 fw-bold mb-3 animate__animated animate__fadeInUp">Matbaa Dünyasının <br><span class="text-primary">Global </span> Pazaryeri!</h1>
+            <p class="lead mb-5 fs-4 opacity-75 animate__animated animate__fadeInUp animate__delay-1s">En kaliteli makineleri en iyi fiyatlarla keşfedin.</p>
+        </div>
+        
+        <div class="row justify-content-center animate__animated animate__fadeInUp animate__delay-1s">
+            <div class="col-lg-8">
+                <div class="search-box p-2 bg-white rounded-pill shadow-lg border">
+                    <form asp-action="Index" method="get" class="d-flex w-100">
+                        <div class="input-group">
+                            <span class="input-group-text bg-transparent border-0 px-4"><i class="fas fa-search text-muted fs-4"></i></span>
+                            <input type="text" name="search" class="form-control border-0 fs-5 py-3" placeholder="Makine adı veya marka ile arama yapın..." value="@Context.Request.Query["search"]" style="box-shadow: none;">
+                            <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold fs-5">Makine Ara</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="text-center mt-3">
+                    <span class="small opacity-75 me-2">Popüler Aramalar:</span>
+                    <a href="/Home/Index?search=Ofset#products-area" class="popular-search me-3">Ofset Baskı</a>
+                    <a href="/Home/Index?search=Lazer#products-area" class="popular-search me-3">Fiber Lazer</a>
+                    <a href="/Home/Index?search=Heidelberg#products-area" class="popular-search">Heidelberg</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="position-absolute w-100 h-100 top-0 start-0 opacity-10" style="background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');"></div>
+</section>
+
+<!-- Hızlı Kategori Seçimi -->
+<div class="container my-5 py-5">
+    <div class="row g-4 text-center">
+        <div class="col-6 col-md-3">
+            <a href="javascript:void(0)" class="category-box shadow-sm quick-cat" data-cat-id="2">
+                <i class="fas fa-print"></i>
+                <h5 class="fw-bold mb-0">Ofset Baskı</h5>
+            </a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a href="javascript:void(0)" class="category-box shadow-sm quick-cat" data-cat-id="5">
+                <i class="fas fa-desktop"></i>
+                <h5 class="fw-bold mb-0">Dijital Baskı</h5>
+            </a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a href="javascript:void(0)" class="category-box shadow-sm quick-cat" data-cat-id="6">
+                <i class="fas fa-bolt"></i>
+                <h5 class="fw-bold mb-0">Lazer Baskı</h5>
+            </a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a href="javascript:void(0)" class="category-box shadow-sm quick-cat" data-cat-id="4">
+                <i class="fas fa-box-open"></i>
+                <h5 class="fw-bold mb-0">Serigrafi</h5>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- İstatistik Bandı -->
+<div class="stat-ribbon mb-5 shadow-sm">
+    <div class="container">
+        <div class="row text-center stat-items">
+            <div class="col-md-4 stat-item">
+                <h3><span class="highlight">2</span> Ülke</h3>
+                <p class="mb-0 text-uppercase tracking-wider small fw-bold opacity-75">TR & AZ Operasyon</p>
+            </div>
+            <div class="col-md-4 stat-item">
+                <h3><span class="highlight">50+</span> Marka</h3>
+                <p class="mb-0 text-uppercase tracking-wider small fw-bold opacity-75">Global Tedarik Ağı</p>
+            </div>
+            <div class="col-md-4 stat-item">
+                <h3><span class="highlight">1000+</span></h3>
+                <p class="mb-0 text-uppercase tracking-wider small fw-bold opacity-75">Mutlu Müşteri</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5" id="products-list">
+    <div class="row">
+        <!-- Sol Filtreleme Paneli -->
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 mb-4 sticky-top" style="top: 20px;">
+                <div class="card-header bg-corporate text-white border-0 py-3 rounded-top-4">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-sliders-h me-2"></i>Filtreleme</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Index" method="get" id="filterForm">
+                        <input type="hidden" name="search" value="@Context.Request.Query["search"]" />
+
+                        <div class="mb-4">
+                            <h6 class="fw-bold border-bottom pb-2 mb-3">Kategoriler</h6>
+                            @{
+                                var selectedCats = Context.Request.Query["categoryIds"].ToList();
+                            }
+                            @foreach (var cat in (IEnumerable<PrintMarket.Models.Category>)ViewBag.Categories)
+                            {
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input filter-checkbox" type="checkbox" name="categoryIds" value="@cat.Id" id="cat_@cat.Id" @(selectedCats.Contains(cat.Id.ToString()) ? "checked" : "")>
+                                    <label class="form-check-label" for="cat_@cat.Id">@cat.Name</label>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="fw-bold border-bottom pb-2 mb-3">Ürün Durumu</h6>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input filter-radio" type="radio" name="condition" value="" id="cond_all" @(string.IsNullOrEmpty(Context.Request.Query["condition"]) ? "checked" : "")>
+                                <label class="form-check-label" for="cond_all">Tümü</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input filter-radio" type="radio" name="condition" value="new" id="cond_new" @(Context.Request.Query["condition"] == "new" ? "checked" : "")>
+                                <label class="form-check-label" for="cond_new">Sıfır</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input filter-radio" type="radio" name="condition" value="used" id="cond_used" @(Context.Request.Query["condition"] == "used" ? "checked" : "")>
+                                <label class="form-check-label" for="cond_used">2. El</label>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <a href="javascript:void(0)" class="btn btn-outline-secondary btn-sm rounded-pill reset-filters">Seçimleri Sıfırla</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ürün Listesi -->
+        <div class="col-md-9 position-relative">
+            <div id="product-overlay" class="product-overlay">
+                <div class="ajax-loader"></div>
+            </div>
+            <div id="product-container">
+                <partial name="_ProductList" model="Model" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Marka Slider Section -->
+<div class="brand-slider-container">
+    <div class="container mb-4 text-center">
+        <h6 class="text-corporate fw-bold text-uppercase tracking-widest">Güçlü Markalarımız</h6>
+    </div>
+    <div class="brand-marquee">
+        <div class="slider-item"><h3>HEIDELBERG</h3></div>
+        <div class="slider-item"><h3>KOMORI</h3></div>
+        <div class="slider-item"><h3>RICOH</h3></div>
+        <div class="slider-item"><h3>CANON</h3></div>
+        <div class="slider-item"><h3>KBA</h3></div>
+        <div class="slider-item"><h3>ADAST</h3></div>
+        <div class="slider-item"><h3>ROLAND</h3></div>
+        <div class="slider-item"><h3>MÜLLER MARTINI</h3></div>
+        <!-- Duplicate for Infinite Loop -->
+        <div class="slider-item"><h3>HEIDELBERG</h3></div>
+        <div class="slider-item"><h3>KOMORI</h3></div>
+        <div class="slider-item"><h3>RICOH</h3></div>
+        <div class="slider-item"><h3>CANON</h3></div>
+        <div class="slider-item"><h3>KBA</h3></div>
+        <div class="slider-item"><h3>ADAST</h3></div>
+        <div class="slider-item"><h3>ROLAND</h3></div>
+        <div class="slider-item"><h3>MÜLLER MARTINI</h3></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // AJAX Filtreleme Fonksiyonu
+        function updateProducts(url) {
+            $("#product-overlay").addClass("active");
+            
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function(result) {
+                    $("#product-container").html(result);
+                    window.history.pushState({ path: url }, '', url);
+                    
+                    // Event dinleyicilerini tekrar bağla
+                    bindDynamicEvents();
+                    
+                    setTimeout(() => {
+                        $("#product-overlay").removeClass("active");
+                    }, 300);
+                },
+                error: function() {
+                    $("#product-overlay").removeClass("active");
+                    Swal.fire('Hata!', 'Ürünler yüklenirken bir sorun oluştu.', 'error');
+                }
+            });
+        }
+
+        function bindDynamicEvents() {
+            // Sıralama Linkleri
+            $('.sort-link').off('click').on('click', function(e) {
+                e.preventDefault();
+                const sort = $(this).data('sort');
+                const url = new URL(window.location.href);
+                url.searchParams.set('sort', sort);
+                url.searchParams.set('page', '1'); // Sıralama değişince 1. sayfaya dön
+                updateProducts(url.toString());
+            });
+
+            // Sayfalama Linkleri
+            $('.pagination-item:not(.disabled)').off('click').on('click', function(e) {
+                e.preventDefault();
+                const page = $(this).data('page');
+                const url = new URL(window.location.href);
+                url.searchParams.set('page', page);
+                updateProducts(url.toString());
+                
+                // Sayfa başına kaydır
+                $('html, body').animate({
+                    scrollTop: $("#products-area").offset().top - 100
+                }, 500);
+            });
+        }
+
+        // Form Gönderimlerini Yakala (Arama ve Filtre)
+        $(document).on('submit', '#filterForm, .hero-section form', function(e) {
+            e.preventDefault();
+            const form = $(this);
+            let action = form.attr('action');
+            // Fragment varsa temizle (AJAX URL inşası için)
+            action = action.split('#')[0];
+            
+            // Serialize ederken page parametresini temizle (yeni filtrede 1. sayfa başlasın)
+            let params = form.serialize();
+            let url = action + (action.includes('?') ? '&' : '?') + params;
+            
+            const finalUrl = new URL(url, window.location.origin);
+            finalUrl.searchParams.set('page', '1'); // Filtre değişince 1. sayfaya dön
+            
+            updateProducts(finalUrl.toString());
+        });
+
+        // Canlı Filtreleme (Checkbox/Radio)
+        $(document).on('change', '.filter-checkbox, .filter-radio', function() {
+            $("#filterForm").submit();
+        });
+
+        // Kategori ve Popüler Arama Linkleri
+        $(document).on('click', '.category-box:not(.quick-cat), .popular-search', function(e) {
+            let href = $(this).attr('href');
+            if (href && (href.startsWith('/Home/Index') || href.startsWith('?'))) {
+                e.preventDefault();
+                // Fragment'ı temizle ama fonksiyona temiz hali gönder
+                href = href.split('#')[0];
+                updateProducts(href);
+            }
+        });
+
+        // Hızlı Kategori İkonları (Quick Cat)
+        $(document).on('click', '.quick-cat', function(e) {
+            e.preventDefault();
+            const catId = $(this).data('cat-id');
+            
+            // Tüm kategorileri temizle
+            $('.filter-checkbox').prop('checked', false);
+            
+            // İlgili kategoriyi seç
+            $('#cat_' + catId).prop('checked', true);
+            
+            // Filtreyi tetikle
+            $("#filterForm").submit();
+            
+            // Ürün alanına odaklan (smooth scroll)
+            $('html, body').animate({
+                scrollTop: $("#product-container").offset().top - 100
+            }, 500);
+        });
+
+        // Seçimleri Sıfırla (Reset Filters AJAX)
+        $(document).on('click', '.reset-filters', function(e) {
+            e.preventDefault();
+            
+            // Form elemanlarını temizle
+            $('#filterForm')[0].reset();
+            $('.filter-checkbox').prop('checked', false);
+            $('.filter-radio').prop('checked', false);
+            $('#cond_all').prop('checked', true); // Varsayılan: Tümü
+            
+            // Arama inputunu temizle (üst menüdeki dahil)
+            $('input[name="search"]').val('');
+            
+            // AJAX isteği gönder
+            updateProducts('/Home/Index');
+            
+            // Üst kısma (İlanlar alanına) odaklan
+            $('html, body').animate({
+                scrollTop: $("#product-container").offset().top - 100
+            }, 500);
+        });
+
+        $(document).ready(function() {
+            bindDynamicEvents();
+        });
+    </script>
+}

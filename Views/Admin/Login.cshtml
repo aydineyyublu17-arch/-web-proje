@@ -1,0 +1,186 @@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Girişi - PrintMarket</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        body {
+            /* Yüksek kaliteli baskı makinesi arka planı */
+            background: url('https://images.unsplash.com/photo-1565514020176-db8b35067980?auto=format&fit=crop&q=80&w=2000') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+            position: relative;
+        }
+
+        /* Koyu lacivert overlay */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 25, 47, 0.85);
+            z-index: 1;
+        }
+
+        .login-card {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 450px;
+            padding: 3rem;
+            /* Glassmorphism Efekti */
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @@keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .logo-text {
+            color: #1B2631;
+            font-size: 2rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-text {
+            color: #6c757d;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+            padding-left: 3rem; /* İkon için boşluk */
+            height: 55px;
+            font-size: 1rem;
+            font-weight: 600; /* Kalın yazı */
+            box-shadow: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1);
+        }
+
+        .input-icon {
+            position: absolute;
+            top: 50%;
+            left: 1rem;
+            transform: translateY(-50%);
+            color: #b0b8c1;
+            z-index: 4;
+            transition: color 0.3s ease;
+        }
+
+        .form-control:focus + label + .input-icon,
+        .form-control:focus ~ .input-icon {
+            color: #3498db;
+        }
+
+        .btn-premium {
+            background: linear-gradient(135deg, #1B2631 0%, #34495e 100%);
+            border: none;
+            color: white;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(44, 62, 80, 0.3);
+        }
+
+        .btn-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(44, 62, 80, 0.4);
+            color: white;
+        }
+
+        .alert-custom {
+            border-radius: 10px;
+            background-color: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+            font-size: 0.9rem;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="login-header">
+            <div class="logo-text">
+                <i class="fas fa-print text-primary"></i> PrintMarket
+            </div>
+            <p class="welcome-text">Yönetim Paneline Hoşgeldiniz</p>
+        </div>
+        
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-custom mb-4">
+                <i class="fas fa-exclamation-circle"></i>
+                @ViewBag.Error
+            </div>
+        }
+
+        <form method="post" asp-action="Login">
+            <div class="mb-4 position-relative">
+                <input type="text" class="form-control" id="username" name="username" placeholder="Kullanıcı Adı" required />
+                <i class="fas fa-user input-icon"></i>
+            </div>
+            
+            <div class="mb-4 position-relative">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Şifre" required />
+                <i class="fas fa-lock input-icon"></i>
+            </div>
+            
+            <div class="d-grid mt-5">
+                <button type="submit" class="btn btn-premium btn-lg">
+                    Giriş Yap <i class="fas fa-arrow-right ms-2"></i>
+                </button>
+            </div>
+        </form>
+
+        <div class="text-center mt-4">
+            <a href="/" class="text-decoration-none small text-muted hover-link">
+                <i class="fas fa-arrow-left me-1"></i> Siteye Dön
+            </a>
+        </div>
+    </div>
+</body>
+</html>

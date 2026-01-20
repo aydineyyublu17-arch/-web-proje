@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin Paneli</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        .admin-wrapper {
+            display: flex;
+            flex: 1;
+        }
+        .sidebar {
+            min-width: 250px;
+            max-width: 250px;
+            background: #343a40;
+            color: #fff;
+            transition: all 0.3s;
+        }
+        .sidebar .nav-link {
+            color: rgba(255,255,255,.8);
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255,255,255,.1);
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            color: #fff;
+            background: rgba(255,255,255,.1);
+        }
+        .sidebar .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        .sidebar-header {
+            padding: 20px;
+            background: #212529;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h3>Admin Paneli</h3>
+            </div>
+            <ul class="nav flex-column">
+                <li class="nav-item mb-3">
+                    <a class="nav-link btn btn-dark text-white text-start" asp-area="" asp-controller="Home" asp-action="Index">
+                        <i class="fas fa-globe"></i> Web Sitesine Git
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Admin" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")" asp-controller="Admin" asp-action="Index">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "AdminProduct" ? "active" : "")" asp-controller="AdminProduct" asp-action="Index">
+                        <i class="fas fa-box"></i> Ürün Yönetimi
+                    </a>
+                </li>
+                <!-- Kategoriler ve Siparişler Kullanıcının isteği doğrultusunda menüde yer alıyor ancak şimdilik işlem yapılmayabilir -->
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Categories" ? "active" : "")" asp-controller="Admin" asp-action="Categories">
+                        <i class="fas fa-tags"></i> Kategoriler
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Orders" ? "active" : "")" asp-controller="Admin" asp-action="Orders">
+                        <i class="fas fa-shopping-cart"></i> Siparişler
+                    </a>
+                </li>
+                <li class="nav-item mt-auto">
+                    <a class="nav-link text-danger" asp-controller="Admin" asp-action="Logout">
+                        <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Page Content -->
+        <div class="content">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4 shadow-sm rounded">
+                <div class="container-fluid">
+                    <span class="navbar-text ms-auto">
+                        @{
+                            var displayName = Context.Session.GetString("DisplayName") ?? Context.Session.GetString("AdminUser") ?? Context.Session.GetString("UserEmail");
+                        }
+                        Hoşgeldiniz, <strong>@displayName</strong>
+                    </span>
+                </div>
+            </nav>
+
+            <main role="main">
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["SuccessMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @TempData["ErrorMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

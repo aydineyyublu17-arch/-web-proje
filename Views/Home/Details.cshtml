@@ -1,0 +1,206 @@
+@model PrintMarket.Models.Product
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container py-5">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">Ana Sayfa</a></li>
+            <li class="breadcrumb-item"><a href="#">@Model.Category?.Name</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+        </ol>
+    </nav>
+
+    <div class="row g-5">
+        <!-- Sol: Ürün Görseli -->
+        <div class="col-lg-6">
+            <div class="details-image-container sticky-top" style="top: 100px;">
+                @if (Model.Images != null && Model.Images.Any())
+                {
+                    <div id="productCarousel" class="carousel slide shadow rounded overflow-hidden" data-bs-interval="false">
+                        @if (Model.Images.Count > 1)
+                        {
+                            <div class="carousel-indicators custom-dark-indicators">
+                                @for (int i = 0; i < Model.Images.Count; i++)
+                                {
+                                    <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "false")" style="background-color: #333;"></button>
+                                }
+                            </div>
+                        }
+                        
+                        <div class="carousel-inner">
+                            @{ var index = 0; }
+                            @foreach (var img in Model.Images)
+                            {
+                                <div class="carousel-item @(index == 0 ? "active" : "")">
+                                    <img src="@img.ImagePath" class="d-block w-100" alt="@Model.Name" style="height: 500px; object-fit: contain; background-color: #fff;">
+                                </div>
+                                index++;
+                            }
+                        </div>
+
+                        @if (Model.Images.Count > 1)
+                        {
+                            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true" style="filter: invert(1);"></span>
+                                <span class="visually-hidden">Geri</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true" style="filter: invert(1);"></span>
+                                <span class="visually-hidden">İleri</span>
+                            </button>
+                        }
+                    </div>
+                }
+                else if (!string.IsNullOrEmpty(Model.ImageUrl))
+                {
+                    <img src="@Model.ImageUrl" class="img-fluid rounded w-100 shadow" alt="@Model.Name">
+                }
+                else
+                {
+                    <img src="https://via.placeholder.com/600x600?text=Resim+Yok" class="img-fluid rounded w-100 shadow" alt="Resim Yok">
+                }
+                
+                <div class="mt-4 p-4 bg-light rounded shadow-sm">
+                    <h5 class="fw-bold mb-3">Satıcı Açıklaması</h5>
+                    <p class="text-muted" style="line-height: 1.8;">@Model.Description</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sağ: Teknik Özellikler ve Satın Alma -->
+        <div class="col-lg-6">
+            <div class="ps-lg-4">
+                <h1 class="fw-bold mb-2">@Model.Name</h1>
+                <p class="text-muted fs-5 mb-4">@Model.Brand | @Model.Category?.Name</p>
+                
+                <div class="details-price mb-4 text-primary">
+                    @if(Model.Currency == "₺") {
+                        <span>@Model.Price.ToString("N2") @Model.Currency</span>
+                    } else {
+                        <span>@Model.Currency@Model.Price.ToString("N2")</span>
+                    }
+                </div>
+
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-0">
+                        <table class="table table-bordered specs-table mb-0">
+                            <tbody>
+                                <tr>
+                                    <th>İlan No</th>
+                                    <td><span class="text-muted" style="font-size: 0.85rem;">PM-@Model.Id.ToString("D6")</span></td>
+                                </tr>
+                                <tr>
+                                    <th>Marka</th>
+                                    <td>@Model.Brand</td>
+                                </tr>
+                                <tr>
+                                    <th>Model</th>
+                                    <td>@(Model.ModelName ?? "-")</td>
+                                </tr>
+                                <tr>
+                                    <th>Üretim Yılı</th>
+                                    <td>@(Model.Year?.ToString() ?? "-")</td>
+                                </tr>
+                                <tr>
+                                    <th>Durumu</th>
+                                    <td>
+                                        @if (Model.IsSecondHand)
+                                        {
+                                            <span class="badge bg-warning text-dark">2. El</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-primary">Sıfır</span>
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Baskı Hızı</th>
+                                    <td>@(Model.PrintSpeed ?? "-")</td>
+                                </tr>
+                                <tr>
+                                    <th>Renk Sayısı</th>
+                                    <td>@(Model.ColorCount?.ToString() ?? "-") Renk</td>
+                                </tr>
+                                <tr>
+                                    <th>Menşei</th>
+                                    <td>@(Model.Origin ?? "-")</td>
+                                </tr>
+                                <tr>
+                                    <th>Stok Durumu</th>
+                                    <td>
+                                        @if (Model.Stock > 0)
+                                        {
+                                            <span class="text-success fw-bold"><i class="fas fa-check-circle me-1"></i> Stokta Var (@Model.Stock adet)</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger fw-bold"><i class="fas fa-times-circle me-1"></i> Stokta Yok</span>
+                                        }
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Satıcı Kartı -->
+                <div class="card border-0 shadow-sm mb-4 bg-light">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="text-muted fw-bold mb-0">SATICI BİLGİLERİ</h6>
+                            <span class="badge bg-success bg-opacity-10 text-success p-2">
+                                <i class="fas fa-check-circle me-1"></i> Onaylı Mağaza
+                            </span>
+                        </div>
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="seller-avatar me-3 bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 50px; height: 50px;">
+                                <i class="fas fa-building text-primary fs-4"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold mb-0">@(Model.Business?.BusinessName ?? "Dünya Baskı Sistemleri")</h5>
+                                <small class="text-muted">PrintMarket Güvencesiyle</small>
+                            </div>
+                        </div>
+                        <div class="d-grid">
+                            <a href="tel:@(Model.Business?.Phone ?? "+905000000000")" class="btn btn-outline-primary border-2 fw-bold py-2">
+                                <i class="fas fa-phone-alt me-2"></i> @(Model.Business?.Phone ?? "İletişime Geç")
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 border rounded-3 bg-white shadow-sm">
+                    <form asp-controller="Cart" asp-action="AddToCart" method="post" class="row g-3">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold small">Adet</label>
+                            <input type="number" name="quantity" value="1" min="1" max="@Model.Stock" class="form-control form-control-lg" />
+                        </div>
+                        <div class="col-md-8 d-flex align-items-end">
+                            @if (Model.Stock > 0)
+                            {
+                                <button type="submit" class="btn btn-success btn-lg w-100 shadow">
+                                    <i class="fas fa-cart-plus me-2"></i> SEPETE EKLE
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-secondary btn-lg w-100 shadow" disabled>
+                                    <i class="fas fa-times-circle me-2"></i> STOKTA YOK
+                                </button>
+                            }
+                        </div>
+                    </form>
+                </div>
+
+                <div class="mt-4">
+                    <a asp-action="Index" class="btn btn-link text-muted"><i class="fas fa-arrow-left me-2"></i>İlanlara Geri Dön</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

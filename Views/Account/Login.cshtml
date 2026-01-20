@@ -1,0 +1,54 @@
+@model PrintMarket.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Giriş Yap";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h3 class="mb-0">Giriş Yap</h3>
+                </div>
+                <div class="card-body p-4">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+                    }
+
+                    <form asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">E-posta Adresi</label>
+                            <input asp-for="Email" class="form-control" placeholder="E-posta adresinizi girin" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Password" class="form-label">Şifre</label>
+                            <input asp-for="Password" class="form-control" type="password" placeholder="Şifrenizi girin" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2 mb-3">Giriş Yap</button>
+                    </form>
+
+                    <hr />
+                    
+                    <div class="text-center mt-3">
+                        <p class="mb-1">Henüz hesabınız yok mu?</p>
+                        <div class="d-grid gap-2 d-md-block">
+                            <a asp-action="RegisterUser" class="btn btn-outline-secondary btn-sm">Bireysel Kayıt</a>
+                            <a asp-action="RegisterBusiness" class="btn btn-outline-info btn-sm">İşletme Kaydı</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

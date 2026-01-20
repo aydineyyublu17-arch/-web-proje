@@ -1,0 +1,85 @@
+@model IEnumerable<PrintMarket.Models.Product>
+
+@{
+    ViewData["Title"] = "Ürün Yönetimi";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Ürünler</h1>
+    <a asp-action="Create" class="btn btn-primary"><i class="fas fa-plus"></i> Yeni Ürün Ekle</a>
+</div>
+
+<table class="table table-bordered table-hover align-middle bg-white shadow-sm rounded">
+    <thead class="table-dark">
+        <tr>
+            <th>Resim</th>
+            <th>Ürün Adı</th>
+            <th>Marka</th>
+            <th>Fiyat</th>
+            <th>Stok</th>
+            <th>Kategori</th>
+            <th class="text-center">Durum</th>
+            <th class="text-center" style="min-width: 150px;">İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="width: 100px;">
+                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                    {
+                        <img src="@item.ImageUrl" alt="@item.Name" class="img-thumbnail" style="max-height: 80px;" />
+                    }
+                    else
+                    {
+                        <span class="text-muted small">Resim Yok</span>
+                    }
+                </td>
+                <td class="fw-bold text-dark">@item.Name</td>
+                <td><span class="badge bg-light text-dark border">@item.Brand</span></td>
+                <td class="text-success fw-bold">
+                    @if(item.Currency == "₺") 
+                    { 
+                        <span>@item.Price.ToString("N0") @item.Currency</span> 
+                    } 
+                    else 
+                    { 
+                        <span>@item.Currency@item.Price.ToString("N0")</span> 
+                    }
+                </td>
+                <td>
+                    <span class="badge @(item.Stock > 0 ? "bg-success" : "bg-danger")">@item.Stock</span>
+                </td>
+                <td>@item.Category?.Name</td>
+                <td class="text-center">
+                    @if (item.IsApproved)
+                    {
+                        <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Yayında</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning text-dark"><i class="fas fa-clock me-1"></i>Beklemede</span>
+                    }
+                </td>
+                <td class="text-center">
+                    <div class="btn-group" role="group">
+                        <form asp-action="ToggleApproval" asp-route-id="@item.Id" method="post" style="display:inline;" title="@(item.IsApproved ? "Yayından Kaldır" : "Yayına Al")">
+                             @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-sm @(item.IsApproved ? "btn-outline-danger" : "btn-outline-success")">
+                                <i class="fas @(item.IsApproved ? "fa-eye-slash" : "fa-eye")"></i>
+                            </button>
+                        </form>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm mx-1" title="Düzenle"><i class="fas fa-edit"></i></a>
+                        <!-- Silme Butonu -->
+                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Bu ürünü silmek istediğinize emin misiniz?');">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-outline-danger btn-sm" title="Sil"><i class="fas fa-trash"></i></button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

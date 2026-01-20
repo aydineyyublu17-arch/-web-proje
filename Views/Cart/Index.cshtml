@@ -1,0 +1,80 @@
+@model List<PrintMarket.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Sepetim";
+    decimal grandTotal = Model.Sum(x => x.TotalPrice);
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Alışveriş Sepetim</h2>
+
+    @if (Model != null && Model.Count > 0)
+    {
+        <div class="row">
+            <div class="col-md-9">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Ürün</th>
+                            <th>Fiyat</th>
+                            <th>Adet</th>
+                            <th>Toplam</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        @if (!string.IsNullOrEmpty(item.Product.ImageUrl))
+                                        {
+                                            <img src="@item.Product.ImageUrl" alt="@item.Product.Name" style="width: 50px; height: 50px; object-fit: cover; margin-right: 10px;" class="rounded">
+                                        }
+                                        <span>@item.Product.Name</span>
+                                    </div>
+                                </td>
+                                <td>@item.Product.Price.ToString("C2")</td>
+                                <td>@item.Quantity</td>
+                                <td class="fw-bold">@item.TotalPrice.ToString("C2")</td>
+                                <td>
+                                    <a asp-action="RemoveFromCart" asp-route-id="@item.Product.Id" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i> Sil</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                 <div class="d-flex justify-content-between">
+                     <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary"><i class="fas fa-arrow-left"></i> Alışverişe Devam Et</a>
+                     <a asp-action="ClearCart" class="btn btn-outline-warning">Sepeti Boşalt</a>
+                 </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h5 class="card-title">Sepet Özeti</h5>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Ara Toplam:</span>
+                            <strong>@grandTotal.ToString("C2")</strong>
+                        </div>
+                        <div class="d-grid">
+                            <a asp-controller="Checkout" asp-action="Index" class="btn btn-success btn-lg rounded-pill shadow-sm">
+                                <i class="fas fa-shopping-basket me-2"></i> Siparişi Tamamla
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center py-5">
+            <h4>Sepetiniz boş</h4>
+            <p>Hemen alışverişe başlayıp harika ürünleri keşfedin!</p>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-3">Alışverişe Başla</a>
+        </div>
+    }
+</div>

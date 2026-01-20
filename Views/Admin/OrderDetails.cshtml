@@ -1,0 +1,76 @@
+@model PrintMarket.Models.Order
+
+@{
+    ViewData["Title"] = "Sipariş Detayı #" + Model.Id;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Sipariş Detayı <small class="text-muted">#@Model.Id</small></h1>
+    <a asp-action="Orders" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Listeye Dön</a>
+</div>
+
+<div class="row">
+    <!-- Müşteri Bilgileri -->
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Müşteri Bilgileri</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Ad Soyad:</strong> @Model.CustomerName</p>
+                <p><strong>Tarih:</strong> @Model.OrderDate.ToString("dd.MM.yyyy HH:mm")</p>
+                <p><strong>Adres:</strong></p>
+                <div class="alert alert-secondary">
+                    @Model.CustomerAddress
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sipariş Kalemleri -->
+    <div class="col-md-8 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Satın Alınan Ürünler</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Ürün</th>
+                            <th>Birim Fiyat</th>
+                            <th>Adet</th>
+                            <th>Ara Toplam</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrderItems)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                         @if (!string.IsNullOrEmpty(item.Product?.ImageUrl))
+                                        {
+                                            <img src="@item.Product.ImageUrl" alt="Ürün" style="width: 40px; height: 40px; object-fit: cover; margin-right: 10px;" class="rounded">
+                                        }
+                                        <span>@(item.Product?.Name ?? "Silinmiş Ürün")</span>
+                                    </div>
+                                </td>
+                                <td>@item.UnitPrice.ToString("N0") ₺</td>
+                                <td>@item.Quantity</td>
+                                <td class="fw-bold">@((item.UnitPrice * item.Quantity).ToString("N0")) ₺</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot class="table-light">
+                        <tr>
+                            <td colspan="3" class="text-end fw-bold">GENEL TOPLAM:</td>
+                            <td class="fw-bold text-success fs-5">@Model.TotalPrice.ToString("N0") ₺</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

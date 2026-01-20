@@ -1,0 +1,70 @@
+@model PrintMarket.ViewModels.BusinessRegisterViewModel
+@{
+    ViewData["Title"] = "İşletme Kaydı";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-info text-white text-center py-3">
+                    <h3 class="mb-0">İşletme Kaydı</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="RegisterBusiness" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="BusinessName" class="form-label">İşletme Adı</label>
+                                <input asp-for="BusinessName" class="form-control" />
+                                <span asp-validation-for="BusinessName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="AuthorizedPerson" class="form-label">Yetkili Kişi</label>
+                                <input asp-for="AuthorizedPerson" class="form-control" />
+                                <span asp-validation-for="AuthorizedPerson" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Email" class="form-label">E-posta</label>
+                                <input asp-for="Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Phone" class="form-label">Telefon</label>
+                                <input asp-for="Phone" class="form-control" />
+                                <span asp-validation-for="Phone" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Password" class="form-label">Şifre</label>
+                                <input asp-for="Password" class="form-control" type="password" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label asp-for="ConfirmPassword" class="form-label">Şifre Tekrar</label>
+                                <input asp-for="ConfirmPassword" class="form-control" type="password" />
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-info w-100 py-2 text-white font-weight-bold">İşletme Kaydını Gönder</button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <a asp-action="Login" class="text-decoration-none small">Zaten bir hesabım var</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

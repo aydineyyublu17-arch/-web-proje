@@ -1,0 +1,78 @@
+@model PrintMarket.Models.Order
+
+@{
+    ViewData["Title"] = "Ödeme Sayfası";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="mb-4">Ödeme Bilgileri</h2>
+        <div class="card shadow">
+            <div class="card-body">
+                <form asp-action="Index" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+                    <div class="row g-4">
+                        <div class="col-12">
+                            <label asp-for="CustomerName" class="form-label fw-bold">Ad Soyad</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                <input asp-for="CustomerName" class="form-control form-control-lg" placeholder="Adınızı ve soyadınızı giriniz" />
+                            </div>
+                            <span asp-validation-for="CustomerName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="PhoneNumber" class="form-label fw-bold">Telefon Numarası</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                <input asp-for="PhoneNumber" class="form-control form-control-lg" placeholder="05XX XXX XX XX" />
+                            </div>
+                            <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="CustomerEmail" class="form-label fw-bold">E-Posta Adresi</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                <input asp-for="CustomerEmail" class="form-control form-control-lg" placeholder="ornek@email.com" />
+                            </div>
+                            <span asp-validation-for="CustomerEmail" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="CustomerAddress" class="form-label fw-bold">Teslimat Adresi</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                <textarea asp-for="CustomerAddress" class="form-control form-control-lg" rows="4" placeholder="Ürünlerin teslim edileceği tam adresi yazınız..."></textarea>
+                            </div>
+                            <span asp-validation-for="CustomerAddress" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info mt-4 d-flex align-items-center">
+                        <i class="fas fa-info-circle fa-2x me-3"></i>
+                        <div>
+                             Ödemenizi teslimat sırasında nakit veya kredi kartı ile yapabilirsiniz. Adres bilgilerinizi kontrol etmeyi unutmayın.
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <button class="w-100 btn btn-success btn-lg py-3 rounded-pill shadow" type="submit">
+                        <i class="fas fa-check-circle me-2"></i> Siparişi Onayla ve Tamamla
+                    </button>
+                    <div class="text-center mt-3">
+                        <a asp-controller="Cart" asp-action="Index" class="text-muted text-decoration-none">
+                            <i class="fas fa-arrow-left me-1"></i> Sepete Geri Dön
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
