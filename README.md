@@ -33,8 +33,8 @@ Bu proje, modern web geliştirme standartlarına uygun olarak **MVC (Model-View-
 
 Projenin çalışır halini, MVC yapısını ve temel özelliklerini anlatan tanıtım videosuna aşağıdaki linkten ulaşabilirsiniz:
 
-[YouTube Video Linki Buraya Gelecek]
-*(Ödev tesliminden önce kendi çektiğiniz videonun linkini buraya yapıştırınız)
+YouTube Video Linki
+https://youtu.be/jeogtgN0E5A
 
 ---
 
