@@ -38,11 +38,4 @@ https://youtu.be/jeogtgN0E5A
 
 ---
 
-### Kurulum (Development)
 
-Projeyi yerel ortamda çalıştırmak için:
-
-1.  Repository'yi klonlayın.
-2.  `appsettings.json` içerisindeki Connection String'i kendi SQL Server instance'ınıza göre düzenleyin.
-3.  Package Manager Console üzerinden `Update-Database` komutunu çalıştırarak veritabanını oluşturun.
-4.  Projeyi derleyip çalıştırın.
